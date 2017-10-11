@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <title> </title>
+        
+        
+    </head>
+    <body>
+
+    <script>
+        $.get("https://data.cityofchicago.org/resource/tt4n-kn4t.json?$query=SELECT%20DISTINCT%20department",function(response)
+        {
+            $.each(response, function(i,v)
+            {
+                $("#depts").append("<option>"+v.department+"</option>");
+            });
+        });
+        
+    </script>
+    
+    <input list="depts">
+    <datalist id="depts">
+    </datalist>
+    </body>
+</html>

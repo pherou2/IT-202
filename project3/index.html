@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        
+    <style>
+        #template{
+            color: black;
+        }
+        .panel{
+            color: red;
+        }
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    
+    </head>
+    <body>
+        <div class = "container">
+        <div class="jumbotron">
+          <h1>Chicago Food Inspection Search</h1>
+          <p>Phil's project</p>
+          
+          
+        <div id="template" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Inspection Date:</h3>
+            </div>
+            <div class="panel-body">
+                <input id = "date" type="date">
+                <!--<input type="text" id = "inspection" name="inspection date"><br> -->
+
+                
+                
+            </div>
+        </div>
+
+        <div id="template" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Facility Type:</h3>
+            </div>
+            <div class="panel-body">
+                <select id = "facility" class="btn btn-primary dropdown-toggle">
+                  <option value="Select">Select</option>
+                  <option value="Restaurant">Restaurant</option>
+                  <option value="Grocery Store">Grocery Store</option>
+                  <option value="School">School</option>
+                  <option value="Daycare (2 - 6 Years)">Daycare (2 - 6 Years)</option>
+                  <option value="Bakery">Bakery</option>
+                  <option value="Children's Services Facility">Children's Services Facility</option>
+                  <option value="Daycare Above and Under 2 Years">Daycare Above and Under 2 Years</option>
+                </select>
+            </div>
+        </div>
+  
+
+         
+        <div id="template" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Inspection Status:</h3>
+            </div>
+            <div class="panel-body">
+                <select id = "results" class="btn btn-primary dropdown-toggle">
+                  <option value="Select">Select</option>
+                  <option value="Pass">Pass</option>
+                  <option value="Pass w/Conditions">Pass w/Conditions</option>
+                  <option value="No Entry">No Entry</option>
+                  <option value="Not Ready">Not Ready</option>
+                  <option value="Fail">Fail</option>
+                </select>
+
+            </div>
+        </div>
+        
+        <div id="template" class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Zip Code:</h3>
+            </div>
+            <div class="panel-body">
+                <input type="text" id = "zip" name="zip code"><br>
+
+            </div>
+        </div>
+          <button class="btn btn-primary btn-lg" id="myBtn">Search</button>
+
+        </div>
+        </div>
+        
+    <div id="map"></div>
+    <script>
+
+
+      // This example displays a marker at the center of Australia.
+      // When the user clicks the marker, an info window opens.
+
+      function initMap() {
+        var uluru = {lat: 41.8781, lng: -87.6297982};
+
+
+        var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+            '<div id="bodyContent">'+
+            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+            'sandstone rock formation in the southern part of the '+
+            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+            'south west of the nearest large town, Alice Springs; 450&#160;km '+
+            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+            'Aboriginal people of the area. It has many springs, waterholes, '+
+            'rock caves and ancient paintings. Uluru is listed as a World '+
+            'Heritage Site.</p>'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>'+
+            '</div>'+
+            '</div>';
+          $("#list").empty();
+          //var node = document.getElementById("")
+          $.get("https://data.cityofchicago.org/resource/cwig-ma7x.json?Where=1=1&zip=" + $("#zip").val()+"&facility_type="+$("#facility").val()
+          +"&results="+$("#results").val() +"&inspection_date="+$("#date").val(), function(response)
+          { 
+              var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 10,
+              center: uluru
+              });
+            $.each(response, function(i,v){
+                $("#list").append(v.inspection_id + " " +v.facility_type+" "+ v.address + " " + v.results + "<br>" )
+            
+
+                console.log(response);
+                
+                var infowindow = new google.maps.InfoWindow({
+                content: contentString
+                });
+    
+                var marker = new google.maps.Marker({
+                  position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
+                  map: map,
+                  title: v.inspection_id
+                });
+               marker.addListener('click', function() {
+                 infowindow.open(map, marker);
+               });
+           });
+          });
+          
+
+      }
+      
+    </script>
+    <div id = "list">
+        
+    </div>
+    <script>
+      $("#myBtn").on("click", initMap);
+    </script>
+    
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM">
+    </script>
+    
+    </body>
+</html>

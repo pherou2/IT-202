@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <script>/* global $ */ 
+        
+        $(document).ready(function() {
+         $.get("https://data.cityofchicago.org/resource/cdmx-wzbz.json?$limit=10", function(response)
+        {
+            $.each(response, function(i,v){
+                var clone = $("#template").clone();
+                console.log(clone);
+                clone.find(".panel-title").text(v.service_request_number);
+                clone.attr("id", v.service_request_number);
+                clone.removeClass("hidden");
+                clone.find(".panel-body").text(v.street_address);
+                //$("p1").append(v.service_request_number + "<br>");
+                //$("p1").append(v.street_address + "<br>");
+                //$("p1").append(v.status + "<br>");
+                $("body").append(clone);
+                console.log("end of each");
+            });
+            console.log(response);
+        });    
+        });
+       
+        </script>
+        
+        <style>
+            #template{
+                display: none;
+            }
+            .hidden{
+                
+            }
+        </style>
+        <title> </title>
+    </head>
+    <body>
+        <h1>311 Grafitti Requests</h1> 
+      
+        <div id="template" class="hidden panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+      
+    </body>
+</html> 
