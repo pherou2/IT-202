@@ -31,14 +31,35 @@
         margin: 0;
         padding: 0;
       }
+
     </style>
     
     </head>
     <body>
-        <div class = "container">
-        <div class="jumbotron">
+        
+        
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">Phil Heroux</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li id = "showSearch"><a href="#">Search</a></li>
+              <li id= "showMap"><a href="#">Map Results Display</a></li>
+              <li id = "showList"><a href="#">List Results Display</a></li>
+            </ul>
+          </div>
+        </nav>
+        
+        
+        
+        
+        
+        <div class = "container ">
+        <div id = "searchScreen" class="jumbotron">
           <h1>Chicago Food Inspection Search</h1>
-          <p>Phil's project</p>
+          <p>Phil Heroux</p>
           
           
         <div id="template" class="panel panel-primary">
@@ -111,10 +132,11 @@
 
       // This example displays a marker at the center of Australia.
       // When the user clicks the marker, an info window opens.
-
+    
       function initMap() {
+         //$(".screen").hide();
         var uluru = {lat: 41.8781, lng: -87.6297982};
-
+        
 
         var contentString = '<div id="content">'+
             '<div id="siteNotice">'+
@@ -137,17 +159,43 @@
             '</div>'+
             '</div>';
           $("#list").empty();
+          var zipVal = "&";
+          var facVal = "&";
+          var inspectDateVal = "&";
+          var resultVal = "&";
+          if($("#zip").val() != "")
+          {
+              zipVal= zipVal+"zip="+ $("#zip").val();
+          }
+          if($("#facility").val() != "Select")
+          {
+              facVal= facVal+ "facility_type="+$("#facility").val();
+          }
+          if($("#results").val() != "Select")
+          {
+              resultVal= resultVal+"results="+$("#results").val();
+          }
+          if($("#date").val() != "YYYY-MM-DD")
+          {
+              inspectDateVal= inspectDateVal+"inspection_date="+$("#date").val();
+          }
           //var node = document.getElementById("")
-          $.get("https://data.cityofchicago.org/resource/cwig-ma7x.json?Where=1=1&zip=" + $("#zip").val()+"&facility_type="+$("#facility").val()
-          +"&results="+$("#results").val() +"&inspection_date="+$("#date").val(), function(response)
+          $.get("https://data.cityofchicago.org/resource/cwig-ma7x.json?"+zipVal+facVal+resultVal+inspectDateVal, function(response)
           { 
               var map = new google.maps.Map(document.getElementById('map'), {
               zoom: 10,
               center: uluru
               });
+              
             $.each(response, function(i,v){
-                $("#list").append(v.inspection_id + " " +v.facility_type+" "+ v.address + " " + v.results + "<br>" )
-            
+                //$("#list").append(v.inspection_id + " " +v.dba_name+" "+ v.aka_name + " "+ v.address+ " "+v.inspection_date+" " + v.results + "<br>" )
+                var clone = $("#list").clone();
+                console.log(clone);
+                clone.find(".panel-heading").append(v.dba_name);
+                //clone.attr("id", v.dba_name);
+                clone.removeClass(".hidden");            
+                clone.find(".panel-body").text(v.inspection_id + "<br>"+ v.inspection_date +"<br>"+ v.aka_name+ "<br>"+ v.address);
+                $("body").append(clone);
 
                 console.log(response);
                 
@@ -163,6 +211,7 @@
                marker.addListener('click', function() {
                  infowindow.open(map, marker);
                });
+               
            });
           });
           
@@ -170,11 +219,57 @@
       }
       
     </script>
-    <div id = "list">
-        
-    </div>
+    
+        <div id="list" class="hidden panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                Panel content
+            </div>
+        </div>
+
+
+    <div id = "blah" class="container hidden">
+      <h2>Panel Heading</h2>
+      <div class="panel panel-default">
+        <div class="panel-heading">Panel Heading</div>
+        <div class="panel-body">Panel Content</div>
+      </div>
+    </div>   
+
+  
+
     <script>
-      $("#myBtn").on("click", initMap);
+      $("#myBtn").on("click", function(){
+          initMap();
+          $("#searchScreen").show();
+          $("#map").show();
+          //$("#list").show();
+
+      });
+    </script>
+    <script>
+      $("#showSearch").on("click", function(){
+          $("#searchScreen").show();
+          $("#map").hide();
+          $("#list").hide();
+      });
+    </script>
+    <script>
+      $("#showMap").on("click", function(){
+        $("#map").show();
+        $("#searchScreen").hide();
+        $("#list").hide();
+      });
+    </script>
+        <script>
+      $("#showList").on("click", function(){
+          $("#list").show();
+          $("#searchScreen").hide();
+          $("#map").hide();
+          
+      });
     </script>
     
     <script async defer

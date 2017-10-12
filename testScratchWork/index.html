@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        
+        <title> </title>
+    </head>
+    <body>
+        
+        <script>
+            
+         $(document).ready(function() {
+            $.get("https://data.cityofchicago.org/resource/cdmx-wzbz.json?zip_code=60645", function(response)
+            {
+                $.each(response, function(i,v)
+                {
+                    var clone = $("#test").clone();
+                    console.log(clone);
+                    clone.text(v.service_request_number);
+                    //$("p").append(v.service_request_number);
+                    $("body").append(clone);
+                });
+            });
+        
+        });
+        </script>
+    <p id="test"></p>
+    </body>
+</html>
