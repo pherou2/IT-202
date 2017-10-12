@@ -188,14 +188,14 @@
               });
               
             $.each(response, function(i,v){
-                //$("#list").append(v.inspection_id + " " +v.dba_name+" "+ v.aka_name + " "+ v.address+ " "+v.inspection_date+" " + v.results + "<br>" )
-                var clone = $("#list").clone();
-                console.log(clone);
-                clone.find(".panel-heading").append(v.dba_name);
+                $("#list").append(v.inspection_id + " " +v.dba_name+" "+ v.aka_name + " "+ v.address+ " "+v.inspection_date+" " + v.results + "<br>" )
+                //var clone = $("#list").clone();
+                //console.log(clone);
+                //clone.find(".panel-heading").append(v.dba_name);
                 //clone.attr("id", v.dba_name);
-                clone.removeClass(".hidden");            
-                clone.find(".panel-body").text(v.inspection_id + "<br>"+ v.inspection_date +"<br>"+ v.aka_name+ "<br>"+ v.address);
-                $("body").append(clone);
+                //clone.removeClass(".hidden");            
+                //clone.find(".panel-body").text(v.inspection_id + "<br>"+ v.inspection_date +"<br>"+ v.aka_name+ "<br>"+ v.address);
+                //$("body").append(clone);
 
                 console.log(response);
                 
@@ -220,7 +220,10 @@
       
     </script>
     
-        <div id="list" class="hidden panel panel-default">
+    <div id = "list">
+        
+    </div>
+        <div id="blah" class="hidden panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Panel title</h3>
             </div>
@@ -245,7 +248,7 @@
           initMap();
           $("#searchScreen").show();
           $("#map").show();
-          //$("#list").show();
+          $("#list").show();
 
       });
     </script>
