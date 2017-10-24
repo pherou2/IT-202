@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <script src="../pixi.js/bin/pixi.js"></script>
+        
+        <style type="text/css">
+        #myCanvas { background:url("https://fthmb.tqn.com/upyq50LHcqPtLIvowyE-xyTxJDs=/400x0/1_25_lg_web-58b832bd3df78c060e654362.jpg") }
+         
+
+        </style>
+        <title> </title>
+    </head>
+    <body>
+
+        <form>
+            <fieldset>
+              <legend>Space Game</legend>
+                  Lives: <a id="getLives"></a>
+                  Score: <a id="getScore"></a>
+            </fieldset>
+        </form> 
+        
+        <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;" >
+        
+
+        
+        <script>
+        
+
+            //
+            //called from drawPic, creates icon on 
+            //
+            /*function drawPic(shape, xPos, yPos, sz){
+                
+                ctx.beginPath();
+                spaceshipIcon.onload(function(){
+                    ctx.drawImage(spaceshipIcon, sz, sz);
+                });
+
+                
+            }*/
+            function checkCharacter(character){
+                switch(character.shape){
+                    case spaceshipIcon:
+                        drawPic(character.shape, character.x, character.y, character.size);
+                        break;
+                    case "circle":
+                        break;
+                    case "square":
+                        break
+                        
+                    
+                }
+                
+                
+                
+            }
+            
+            function collisionCheck(hero, help, hurt){
+                
+                var heroHelpDistance = Math.sqrt(Math.pow(help.x-hero.x) + Math.pow(help.y-hero.y));
+                if(heroHelpDistance < help.size+ hero.size){
+                    help.x = Math.floor(Math.random()*400);
+                    help.y = 0;
+                    game.score += 10;
+                }
+                
+                var heroHurtDistance = Math.sqrt(Math.pow(hurt.x-hero.x) + Math.pow(hurt.y-hero.y));
+                if(heroHurtDistance < hurt.size+ hero.size){
+                    hurt.x = Math.floor(Math.random()*400);
+                    hurt.y = 0;
+                    game.lives -= 1;
+                    
+                    if(game.lives == 0){
+                        window.cancelAnimationFrame(game);
+                        
+                    }
+                        
+                }
+                
+            }
+            var spaceshipIcon = new Image();
+            spaceshipIcon.src = "Spaceship-PNG-Pic.png";
+            //spaceshipIcon.src = "http://www.pngmart.com/?p=26266";
+            //<img id="ship" width="15" height="15" src="Spaceship-PNG-Pic.png" alt="The ship">
+            
+            var player = {x: 200, y: 350, color:"blue", shape: spaceshipIcon, size: 15};
+            var game = {"score":0, "lives":3};
+            var harm = {x:25, y:0, color: "red", shape:"circle", size: 10}
+            var bene = {x:300, y:0, color:"green", shape:"circle", size: 8}
+ 
+            document.getElementById("getLives").innerHTML = game.lives;
+            document.getElementById("getScore").innerHTML = game.score;
+            
+            var ctx = document.getElementById('myCanvas').getContext('2d');
+            
+            startGame();
+            function startGame(){
+                ctx.clearRect(0, 0, 400, 400); 
+                
+                bene.y+=1;
+                harm.y+=1;
+                
+                checkCharacter(player);
+                checkCharacter(bene);
+                checkCharacter(harm);
+                collisionCheck(player, bene, harm);
+                
+                window.requestAnimationFrame(startGame);
+
+
+            }
+
+        </script>
+        
+        <script>
+            function drawPic(character){
+
+
+                document.onkeydown = function(e) {
+                    switch (e.keyCode) {
+                        case 37:
+                            character.x -= 10;
+                            if(character.x <= 0){
+                                character.x = 400;
+                            }
+                            //left
+                            break;
+                        case 38:
+                            character.y -= 10;
+                            if(character.y <= 0){
+                                character.y = 400;
+                            }                            
+                            //up
+                            break;
+                        case 39:
+                            character.x +=  10;
+                            if(character.x >=400){
+                                character.x = 0;
+                            }
+                            //right
+                            break;
+                        case 40:
+                            character.y += 10;
+                            if(character.y >=400){
+                                character.y = 0;
+                            }
+                            //down
+                            break;
+                    }
+                };
+
+                
+                ctx.drawImage(character.shape, character.x, character.y, character.size, character.size);
+                ctx.fill();
+                ctx.stroke();
+
+                //ctx.beginPath();
+                //ctx.arc(xPos,yPos,sz,0,2*Math.PI);
+                //ctx.fillStyle = 'red';//'rgb('+rgbOne+','+ rgbTwo+','+ rgbThree+')';
+                //ctx.fill();
+                //ctx.stroke();
+                
+            }
+            
+            function drawCircle(character){
+                //console.log(xPos, yPos);
+                
+                
+                if(character.y == 400){
+                    character.x = Math.floor(Math.random()*400)
+                    character.y = 0;
+                }
+                
+                ctx.beginPath();
+                ctx.arc(character.x,character.y,character.size,0,2*Math.PI);
+                ctx.fillStyle = character.color;//'rgb('+rgbOne+','+ rgbTwo+','+ rgbThree+')';
+                ctx.fill();
+                ctx.stroke();
+                
+            }
+            
+            //
+            //checks character shape type and sends to proper 
+            //function to draw that shape
+            function checkCharacter(character){
+                console.log(character.shape);
+                switch(character.shape){
+                    case spaceshipIcon:
+                        drawPic(character);
+                        break;
+                    case "circle":
+                        drawCircle(character);
+                        break;
+                    case "square":
+                        break
+                        
+                    
+                }
+                
+                
+                
+            }
+            
+            startGame();
+
+        </script>
+
+
+    </body>
+</html>
