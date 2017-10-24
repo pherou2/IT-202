@@ -14,12 +14,13 @@
         
         
     <style>
+        .panel-heading{
+            background-color: blue;
+        }
         #template{
             color: black;
         }
-        .panel{
-            color: red;
-        }
+
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
       #map {
@@ -137,6 +138,8 @@
          //$(".screen").hide();
         var uluru = {lat: 41.8781, lng: -87.6297982};
         
+        $(".panel-default").not("#list").remove();
+
 
         var contentString = '<div id="content">'+
             '<div id="siteNotice">'+
@@ -158,7 +161,6 @@
             '(last visited June 22, 2009).</p>'+
             '</div>'+
             '</div>';
-          $("#list").empty();
           var zipVal = "&";
           var facVal = "&";
           var inspectDateVal = "&";
@@ -188,16 +190,17 @@
               });
               
             $.each(response, function(i,v){
-                $("#list").append(v.inspection_id + " " +v.dba_name+" "+ v.aka_name + " "+ v.address+ " "+v.inspection_date+" " + v.results + "<br>" )
-                //var clone = $("#list").clone();
-                //console.log(clone);
-                //clone.find(".panel-heading").append(v.dba_name);
-                //clone.attr("id", v.dba_name);
-                //clone.removeClass(".hidden");            
-                //clone.find(".panel-body").text(v.inspection_id + "<br>"+ v.inspection_date +"<br>"+ v.aka_name+ "<br>"+ v.address);
-                //$("body").append(clone);
+                //$("#list").append(v.inspection_id + " " +v.dba_name+" "+ v.aka_name + " "+ v.address+ " "+v.inspection_date+" " + v.results + "<br><br>" )
+                var clone = $("#list").clone();
+                console.log(clone);
+                clone.find(".panel-title").text(v.dba_name);
+                clone.attr("id", v.dba_name);
+                clone.removeClass("hidden");
+                clone.find(".panel-body").text(v.aka_name);
 
-                console.log(response);
+                $("#items").append(clone);
+                //console.log(response);
+
                 
                 var infowindow = new google.maps.InfoWindow({
                 content: contentString
@@ -213,6 +216,7 @@
                });
                
            });
+
           });
           
 
@@ -220,10 +224,7 @@
       
     </script>
     
-    <div id = "list">
-        
-    </div>
-        <div id="blah" class="hidden panel panel-default">
+        <div id="list" class="hidden panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Panel title</h3>
             </div>
@@ -232,16 +233,11 @@
             </div>
         </div>
 
-
-    <div id = "blah" class="container hidden">
-      <h2>Panel Heading</h2>
-      <div class="panel panel-default">
-        <div class="panel-heading">Panel Heading</div>
-        <div class="panel-body">Panel Content</div>
+<!--<div id ="list"></div> -->
+      <div id = "items">
+          
+          
       </div>
-    </div>   
-
-  
 
     <script>
       $("#myBtn").on("click", function(){

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <title> </title>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;" >
+   
+    <script>
+       $("#myCanvas").on("click", function(e){
+           drawCircle(e.clientX, e.clientY);
+           
+       });
+    </script>
+    <script>
+
+
+        function drawCircle(x,y){
+            var radius = Math.floor(Math.random()*50);
+            
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            ctx.beginPath();
+            ctx.arc(x,y,radius,0,2*Math.PI);
+            var rgbOne = Math.floor(Math.random()*255);
+            var rgbTwo = Math.floor(Math.random()*255);
+            var rgbThree = Math.floor(Math.random()*255)
+            ctx.fillStyle ='rgb('+rgbOne+','+ rgbTwo+','+ rgbThree+')';
+            ctx.fill();
+            ctx.stroke();
+        }
+
+
+    </script> 
+
+    </body>
+</html>

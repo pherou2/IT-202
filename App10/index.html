@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        
+        <title> </title>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;" >
+
+        <script>
+            var player = {x: 0, y: 200, color:"blue", shape:"circle", size: 15};
+            var game = {"score":0, "lives":3};
+            var harm = {x:400, y:75, shape:"circle", size: 10}
+            var bene = {x:400, y:25, shape:"circle", size: 8}
+
+        </script>
+        <script>
+                var c = document.getElementById("myCanvas");
+                var ctx = c.getContext("2d");
+    
+            function game(){
+
+
+                player["x"] +=1;
+
+                
+                ctx.clearRect(0,0,400,400);
+
+                ctx.beginPath();
+                ctx.arc(player["x"],player["y"],player["size"],0,2*Math.PI);
+                //var rgbOne = Math.floor(Math.random()*255);
+                //var rgbTwo = Math.floor(Math.random()*255);
+                //var rgbThree = Math.floor(Math.random()*255)
+                ctx.fillStyle = 'red';//'rgb('+rgbOne+','+ rgbTwo+','+ rgbThree+')';
+                ctx.fill();
+                ctx.stroke();
+                
+                
+                //if(x==400 || y== 400)
+                //    window.cancelAnimationFrame();
+                //setTimeout(function(){
+                  window.requestAnimationFrame(game);
+
+                //});
+
+            }
+    
+    
+            game();
+
+        </script> 
+        
+    </body>
+</html>
