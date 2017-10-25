@@ -10,7 +10,7 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
-        <script src="../pixi.js/bin/pixi.js"></script>
+        <!--<script src="../pixi.js/bin/pixi.js"></script>-->
         
         <style type="text/css">
         #myCanvas { background:url("https://fthmb.tqn.com/upyq50LHcqPtLIvowyE-xyTxJDs=/400x0/1_25_lg_web-58b832bd3df78c060e654362.jpg") }
@@ -35,94 +35,10 @@
         
         <script>
         
-
-            //
-            //called from drawPic, creates icon on 
-            //
-            /*function drawPic(shape, xPos, yPos, sz){
-                
-                ctx.beginPath();
-                spaceshipIcon.onload(function(){
-                    ctx.drawImage(spaceshipIcon, sz, sz);
-                });
-
-                
-            }*/
-            function checkCharacter(character){
-                switch(character.shape){
-                    case spaceshipIcon:
-                        drawPic(character.shape, character.x, character.y, character.size);
-                        break;
-                    case "circle":
-                        break;
-                    case "square":
-                        break
-                        
-                    
-                }
-                
-                
-                
-            }
-            
-            function collisionCheck(hero, help, hurt){
-                
-                var heroHelpDistance = Math.sqrt(Math.pow(help.x-hero.x) + Math.pow(help.y-hero.y));
-                if(heroHelpDistance < help.size+ hero.size){
-                    help.x = Math.floor(Math.random()*400);
-                    help.y = 0;
-                    game.score += 10;
-                }
-                
-                var heroHurtDistance = Math.sqrt(Math.pow(hurt.x-hero.x) + Math.pow(hurt.y-hero.y));
-                if(heroHurtDistance < hurt.size+ hero.size){
-                    hurt.x = Math.floor(Math.random()*400);
-                    hurt.y = 0;
-                    game.lives -= 1;
-                    
-                    if(game.lives == 0){
-                        window.cancelAnimationFrame(game);
-                        
-                    }
-                        
-                }
-                
-            }
-            var spaceshipIcon = new Image();
-            spaceshipIcon.src = "Spaceship-PNG-Pic.png";
-            //spaceshipIcon.src = "http://www.pngmart.com/?p=26266";
-            //<img id="ship" width="15" height="15" src="Spaceship-PNG-Pic.png" alt="The ship">
-            
-            var player = {x: 200, y: 350, color:"blue", shape: spaceshipIcon, size: 15};
-            var game = {"score":0, "lives":3};
-            var harm = {x:25, y:0, color: "red", shape:"circle", size: 10}
-            var bene = {x:300, y:0, color:"green", shape:"circle", size: 8}
- 
-            document.getElementById("getLives").innerHTML = game.lives;
-            document.getElementById("getScore").innerHTML = game.score;
-            
-            var ctx = document.getElementById('myCanvas').getContext('2d');
-            
-            startGame();
-            function startGame(){
-                ctx.clearRect(0, 0, 400, 400); 
-                
-                bene.y+=1;
-                harm.y+=1;
-                
-                checkCharacter(player);
-                checkCharacter(bene);
-                checkCharacter(harm);
-                collisionCheck(player, bene, harm);
-                
-                window.requestAnimationFrame(startGame);
-
-
-            }
-
-        </script>
         
-        <script>
+            //
+            //function called by checkCharacter
+            //looks for keyobard input and draws user icon
             function drawPic(character){
 
 
@@ -160,7 +76,7 @@
                 };
 
                 
-                ctx.drawImage(character.shape, character.x, character.y, character.size, character.size);
+                ctx.drawImage(character.shape, character.x, character.y, character.size*2, character.size*2);
                 ctx.fill();
                 ctx.stroke();
 
@@ -170,14 +86,18 @@
                 //ctx.fill();
                 //ctx.stroke();
                 
-            }
+            }  
             
+            //
+            //called from checkCharacter
+            //draws circle for bene and harm objects. Loops to top of screen 
+            //once edge is hit
             function drawCircle(character){
                 //console.log(xPos, yPos);
                 
                 
                 if(character.y == 400){
-                    character.x = Math.floor(Math.random()*400)
+                    character.x = Math.floor(Math.random()*400);
                     character.y = 0;
                 }
                 
@@ -188,12 +108,13 @@
                 ctx.stroke();
                 
             }
+
             
             //
-            //checks character shape type and sends to proper 
-            //function to draw that shape
+            //checks what character shape is and sends to proper drawing function
+            //
             function checkCharacter(character){
-                console.log(character.shape);
+                //console.log(character.shape);
                 switch(character.shape){
                     case spaceshipIcon:
                         drawPic(character);
@@ -210,8 +131,84 @@
                 
                 
             }
+            var animate;
+
+            function collisionCheck(hero, help, hurt){
+                //console.log(hero.size);
+                //console.log(help.size);
+                var dx = Math.pow(help.x-hero.x, 2);
+                var dy = Math.pow(help.y-hero.y, 2);
+                //console.log(dx);
+                //console.log(dy);
+                
+                var heroHelpDistance = Math.sqrt((dx+dy));
+                if(heroHelpDistance < help.size + hero.size){
+                    help.x = Math.floor(Math.random()*400);
+                    help.y = 0;
+                    game.score += 10;
+                    document.getElementById("getScore").innerHTML = game.score;
+
+                    console.log(game.score);
+                }
+                
+
+                var heroHurtDistance = Math.sqrt(Math.pow(hurt.x-hero.x,2) + Math.pow(hurt.y-hero.y,2));
+                if(heroHurtDistance < hurt.size+ hero.size){
+                    hurt.x = Math.floor(Math.random()*400);
+                    hurt.y = 0;
+                    game.lives -= 1;
+                    document.getElementById("getLives").innerHTML = game.lives;
+
+                    console.log(game.lives);
+                    
+                    if(game.lives == 0){
+                        cancelAnimationFrame(animate);
+                        ctx.font = "50px Arial";
+                        ctx.fillText("GAME OVER",10,50);
+                        
+                    }
+                        
+                }
+                
+            }
+            var spaceshipIcon = new Image();
+            spaceshipIcon.src = "Spaceship-PNG-Pic.png";
+            //spaceshipIcon.src = "http://www.pngmart.com/?p=26266";
+            //<img id="ship" width="15" height="15" src="Spaceship-PNG-Pic.png" alt="The ship">
+            
+            var player = {x: 200, y: 350, color:"blue", shape: spaceshipIcon, size: 15};
+            var game = {"score":0, "lives":3};
+            var harm = {x:25, y:0, color: "red", shape:"circle", size: 10};
+            var bene = {x:300, y:0, color:"green", shape:"circle", size: 8};
+ 
+            document.getElementById("getLives").innerHTML = game.lives;
+            document.getElementById("getScore").innerHTML = game.score;
+            
+            var ctx = document.getElementById('myCanvas').getContext('2d');
             
             startGame();
+            function startGame(){
+                ctx.clearRect(0, 0, 400, 400); 
+                
+                bene.y+=1;
+                harm.y+=1;
+                
+                checkCharacter(player);
+                checkCharacter(bene);
+                checkCharacter(harm);
+                
+                animate = requestAnimationFrame(startGame);
+                collisionCheck(player, bene, harm);
+
+
+
+            }
+
+        </script>
+        
+        <script>
+    
+            //startGame();
 
         </script>
 
