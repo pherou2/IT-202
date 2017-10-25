@@ -76,7 +76,7 @@
                 };
 
                 
-                ctx.drawImage(character.shape, character.x, character.y, character.size*2, character.size*2);
+                ctx.drawImage(character.shape, character.x, character.y, character.size, character.size);
                 ctx.fill();
                 ctx.stroke();
 
@@ -136,13 +136,18 @@
             function collisionCheck(hero, help, hurt){
                 //console.log(hero.size);
                 //console.log(help.size);
-                var dx = Math.pow(help.x-hero.x, 2);
-                var dy = Math.pow(help.y-hero.y, 2);
+                //console.log(hero.x/2);
+                //console.log(hero.y/2);
+                var heroAdjustX = hero.x +10;
+                var heroAdjustY = hero.y +20;
+                var dx = Math.pow(help.x-heroAdjustX, 2);
+                var dy = Math.pow(help.y-heroAdjustY, 2);
                 //console.log(dx);
                 //console.log(dy);
                 
                 var heroHelpDistance = Math.sqrt((dx+dy));
-                if(heroHelpDistance < help.size + hero.size){
+                //console.log(heroHelpDistance);
+                if(heroHelpDistance < help.size + hero.size/2){
                     help.x = Math.floor(Math.random()*400);
                     help.y = 0;
                     game.score += 10;
@@ -152,8 +157,8 @@
                 }
                 
 
-                var heroHurtDistance = Math.sqrt(Math.pow(hurt.x-hero.x,2) + Math.pow(hurt.y-hero.y,2));
-                if(heroHurtDistance < hurt.size+ hero.size){
+                var heroHurtDistance = Math.sqrt(Math.pow(hurt.x-heroAdjustX,2) + Math.pow(hurt.y-heroAdjustY,2));
+                if(heroHurtDistance < hurt.size+ hero.size/2){
                     hurt.x = Math.floor(Math.random()*400);
                     hurt.y = 0;
                     game.lives -= 1;
@@ -176,7 +181,7 @@
             //spaceshipIcon.src = "http://www.pngmart.com/?p=26266";
             //<img id="ship" width="15" height="15" src="Spaceship-PNG-Pic.png" alt="The ship">
             
-            var player = {x: 200, y: 350, color:"blue", shape: spaceshipIcon, size: 15};
+            var player = {x: 200, y: 350, color:"blue", shape: spaceshipIcon, size: 30};
             var game = {"score":0, "lives":3};
             var harm = {x:25, y:0, color: "red", shape:"circle", size: 10};
             var bene = {x:300, y:0, color:"green", shape:"circle", size: 8};
