@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <script src="./big_proj.js" async></script> 
+        
+        <style>
+           #map {
+            height: 400px;
+            width: 100%;
+           }
+            .loader {
+                border: 16px solid #f3f3f3; /* Light grey */
+                border-top: 16px solid #3498db; /* Blue */
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+        </style>       
+    </head>
+    <body>
+        
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">FindEvents</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li id = "showSearch"><a href="#">Search</a></li>
+              <li id= "showMap"><a href="#">Map Results Display</a></li>
+              <li id = "showList"><a href="#">List Results Display</a></li>
+            </ul>
+          </div>
+        </nav>
+        
+        <div class = "container ">
+          <div id = "searchScreen" class="jumbotron">
+            <h1 style = text-align:center >Find events near you!</h1>
+            <button width: 500x type="button" class="btn-block btn btn-primary btn-lg">Explore Now!</button>
+        
+          </div>
+        </div>
+        
+        
+        
+        <div id="map"></div>
+        <script>
+          function initMap(lat, long) {
+            var uluru = {lat: lat, lng: long};
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 12,
+              center: uluru
+            });
+            //map initialized position
+            var marker = new google.maps.Marker({
+              position: uluru,
+              map: map
+            });
+
+          }
+        </script>
+        
+        <script>
+          function geoFindMe() {
+            if ("geolocation" in navigator) {
+              navigator.geolocation.getCurrentPosition(function(position) {
+              initMap(position.coords.latitude, position.coords.longitude);
+            });
+            } else {
+              alert('no geolocation');
+            }
+          }
+        </script>
+        
+        <div class="loader">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+          </svg>
+        </div>
+        
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM&callback=geoFindMe">
+        </script>
+    </body>
+</html>
