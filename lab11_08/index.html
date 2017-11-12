@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap(lt, lg) {
+        var uluru = {lat: lt, lng: lg};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+        
+        map.addListener('click', function(e) {
+            placeMarkerAndPanTo(e.latLng, map);
+          });
+        
+      }
+      
+      function placeMarkerAndPanTo(latLng, map) {
+        var marker = new google.maps.Marker({
+          position: latLng,
+          map: map
+        });
+        map.panTo(latLng);
+      }
+    </script>
+    
+    <script>
+      function geoFindMe() {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+          initMap(position.coords.latitude, position.coords.longitude);
+        });
+        } else {
+          alert('no geolocation');
+        }
+      }
+  </script>
+  
+  <script>
+    
+  </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM&callback=geoFindMe">
+    </script>
+  </body>
+</html>
