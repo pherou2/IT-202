@@ -52,7 +52,7 @@
         <div class = "container ">
           <div id = "searchScreen" class="jumbotron">
             <h1 style = text-align:center >Find events near you!</h1>
-            <button width: 500x type="button" class="btn-block btn btn-primary btn-lg">Explore Now!</button>
+            <button width: 500x type="button" class="btn-block btn btn-primary btn-lg" id="myBtn">Explore Now!</button>
         
           </div>
         </div>
@@ -72,6 +72,19 @@
               position: uluru,
               map: map
             });
+            
+            $.get("https://polar-garden-75406.herokuapp.com/apiPassThru.php?apiEndpoint=http://api.eventful.com/json/events/search&date=Today&where=42.1817,-87.8003&within=5&app_key=Fh3x4vqzpfPjhfzN", function(response)
+            {
+              console.log(response);
+              var userData = response.results;
+
+              
+             $.each(userData, function(i,v){
+                //console.log(v.title);
+             });
+              
+            });
+
 
           }
         </script>
@@ -88,6 +101,30 @@
           }
         </script>
         
+        <script>
+          $("#myBtn").on("click", function(){
+              geoFindMe();
+              $("#searchScreen").hide();
+              $("#map").show();
+              $("#list").show();
+    
+          });
+        </script>
+        <script>
+          $("#showSearch").on("click", function(){
+              $("#searchScreen").show();
+              $("#map").hide();
+              $("#list").hide();
+          });
+        </script>
+        <script>
+          $("#showList").on("click", function(){
+              $("#list").show();
+              $("#searchScreen").hide();
+              $("#map").hide();
+          });
+        </script>
+        
         <div class="loader">
           <svg viewBox="0 0 32 32" width="32" height="32">
             <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
@@ -95,7 +132,7 @@
         </div>
         
         <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM&callback=geoFindMe">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM">
         </script>
     </body>
 </html>

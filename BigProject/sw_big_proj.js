@@ -1,6 +1,9 @@
 // JavaScript File
 var cacheName = 'findeventscache';
-var filesToCache = [];
+var filesToCache = [
+  './',
+  './index.html'
+  ];
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
