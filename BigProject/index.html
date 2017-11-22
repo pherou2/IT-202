@@ -72,17 +72,16 @@
               position: uluru,
               map: map
             });
-            
-            $.get("https://polar-garden-75406.herokuapp.com/apiPassThru.php?apiEndpoint=http://api.eventful.com/json/events/search&date=Today&where=42.1817,-87.8003&within=5&app_key=Fh3x4vqzpfPjhfzN", function(response)
+            console.log(lat);
+            console.log(long);
+            $.getJSON("https://polar-garden-75406.herokuapp.com/apiPassThru.php?apiEndpoint=http://api.eventful.com/json/events/search&date=Today&where="+lat+","+long+"&within=1&app_key=Fh3x4vqzpfPjhfzN", function(response)
             {
               console.log(response);
-              var userData = response.results;
-
               
-             $.each(userData, function(i,v){
-                //console.log(v.title);
-             });
-              
+              $.each(response.events.event, function(i,v){
+                  console.log(v.title);
+              });
+                
             });
 
 
@@ -115,6 +114,13 @@
               $("#searchScreen").show();
               $("#map").hide();
               $("#list").hide();
+          });
+        </script>
+        <script>
+          $("#showMap").on("click", function(){
+            $("#map").show();
+            $("#searchScreen").hide();
+            $("#list").hide();
           });
         </script>
         <script>
