@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+    <link href="index.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <button id="getQOD">Get Quote of the Day</button>
+    <button id="btnSay">Say Quote</button>
+    <button id="btnSaveQuote">Save Current Quote</button>
+    <button id="btnGetSavedQuotes">Get Saved Quotes</button>
+    <div id="quote"></div>
+    
+    <div id="quoteTemplate" class="savedQuote"></div>
+    
+    
+    <!-- Include Dexie -->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <script src="rand.js"></script>
+  </body>
+</html>
