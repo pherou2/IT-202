@@ -14,7 +14,13 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
-    
+        <!--Material component import links-->
+
+          
+        <link rel="stylesheet"
+              href="https://unpkg.com/material-components-web@0.9.1/dist/material-components-web.min.css"> 
+        
+        <link rel="stylesheet" href="app.css">
         
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
@@ -134,6 +140,82 @@
               });
                 
             });
+            
+            $.get("https://data.cityofchicago.org/resource/p97q-qace.json?$where=within_circle(location, "+lat+", "+long+", 2000)",function(response){
+              // &where=within_circle(location,"+long+","+lat+", 2000)
+              console.log(response);
+             
+              $.each(response, function(i,v){
+                console.log(v.park_name);
+                
+              var dog, basketball, football_soccer, pool, fitness_center;
+              if(v.dog_friendly == 1){
+                dog = "yes";
+              }
+              else{
+                dog = "no";
+              }
+              if(v.basketball_courts == 1){
+                basketball = "yes";
+              }
+              else{
+                basketball = "no";
+              }
+              if(v.football_soccer_combo == 1){
+                football_soccer = "yes";
+              }
+              else{
+                football_soccer = "no";
+              }
+              if(v.pool_indoor == 1 || v.pool_outdoor ==1){
+                pool = "yes";
+              }
+              else{
+                pool = "no";
+              } 
+              if(v.fitness_center ==1){
+                fitness_center = "yes";
+              }
+              else{
+                fitness_center = "no";
+              } 
+                  var parkString = '<div id="content">'+
+                    '<div id="siteNotice">'+
+                    '</div>'+
+                    '<h1 id="firstHeading" class="firstHeading">'+v.park_name+'Park</h1>'+
+                    '<div id="bodyContent">'+
+                    '<p></br>Park Address: '+v.street_address+'</p>'+
+                    '</br><i>Dog Friendly:</> '+dog+'</p>'+
+                    '</br><i>Basketball Courts:</> '+basketball+'</p>'+
+                    '</br><i>Football/Soccer Fields:</> '+football_soccer+'</p>'+ 
+                    '</br><i>Pools:</> '+pool+'</p>'+
+                    '</br><i>Fitness Center:</> '+fitness_center+'</p>'+
+                    '</div>'+
+                    '</div>'; 
+                
+                var infowindow = new google.maps.InfoWindow({
+                  content: parkString
+
+                });  
+                  
+                var marker = new google.maps.Marker({
+                  position: {lat: parseFloat(v.location.latitude), lng: parseFloat(v.location.longitude)},
+                  map: map,
+                  title: v.title
+                });
+                marker.addListener('click', function() {
+                  infowindow.open(map, marker);
+                });                
+                
+                
+                
+                
+                
+              });
+              
+              
+              
+            });
 
 
           }
@@ -205,22 +287,7 @@
           </div>
         </div>
         
-        <div class="mdc-card__horizontal-block">
-  <section class="mdc-card__primary">
-    <h1 class="mdc-card__title mdc-card__title--large">Title here</h1>
-    <h2 class="mdc-card__subtitle">Subtitle here</h2>
-  </section>
-  <section class="mdc-card__actions">
-    <button class="mdc-button mdc-button--compact mdc-card__action">Action</button>
-  </section>
-    <section class="mdc-card__primary">
-    <h1 class="mdc-card__title mdc-card__title--large">Title here</h1>
-    <h2 class="mdc-card__subtitle">Subtitle here</h2>
-  </section>
-  <section class="mdc-card__actions">
-    <button class="mdc-button mdc-button--compact mdc-card__action">Action</button>
-  </section>
-</div>
+
         
     </body>
 </html>
