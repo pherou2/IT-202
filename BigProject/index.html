@@ -20,6 +20,7 @@
         <link rel="stylesheet"
               href="https://unpkg.com/material-components-web@0.9.1/dist/material-components-web.min.css"> 
         
+
         <link rel="stylesheet" href="app.css">
         
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -28,6 +29,8 @@
 
         
         <style>
+        
+        
            #map {
             height: 400px;
             width: 100%;
@@ -44,7 +47,18 @@
               0% { transform: rotate(0deg); }
               100% { transform: rotate(360deg); }
             }
-        </style>       
+        </style>     
+        
+        <link rel="manifest" href="./manifest.json">
+        
+          <!-- Add to home screen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="EventsNearYou">
+        <link rel="apple-touch-icon" href="./three-circles-of-different-sizes-one-inside-other.png">
+        
+        <meta name="msapplication-TileImage" content="./three-circles-of-different-sizes-one-inside-other.png">
+        <meta name="msapplication-TileColor" content="#2F3BA2">
     </head>
     <body>
         
@@ -83,6 +97,7 @@
         <div id="map"></div>
         <script>
           function initMap(lat, long) {
+            db2.events.clear();
             
 
             var uluru = {lat: lat, lng: long};
@@ -104,7 +119,7 @@
               
               $.each(response.events.event, function(i,v){
                   //console.log(v.title);
-                  //var currentEvent = v;
+                  var currentEvent = v;
                   saveFunction2(currentEvent);
                   var contentString = '<div id="content">'+
                     '<div id="siteNotice">'+
@@ -136,6 +151,18 @@
                   infowindow.open(map, marker);
                 });
                
+               
+                var clone = $("#card").clone();
+                clone.find(".mdc-card__title").text(v.title);
+                clone.find(".mdc-card__subtitle").text('Venue Name: '+v.venue_name+' --- Venue Address: '+v.venue_address);
+                clone.attr("id", v.title);
+                clone.removeClass("hidden");
+                clone.find(".mdc-card__supporting-text").text('Event Description: '+v.description);
+                clone.find("#btn1").text("Visit Website");
+                clone.find('#btn1').attr("href",v.url);
+                //clone.find('#btn1').on("click", navFunction());
+                //clone.find('#btn1').attr("onclick",window.open(v.url));
+                $("#list").append(clone);
                
               });
                 
@@ -207,7 +234,14 @@
                   infowindow.open(map, marker);
                 });                
                 
-                
+                var clone = $("#card").clone();
+                console.log(clone);
+                clone.find(".mdc-card__title").text(v.park_name);
+                clone.attr("id", v.park_name);
+                clone.removeClass("hidden");
+                clone.find(".mdc-card__supporting-text").text(parkString);
+
+                $("#list").append(clone);
                 
                 
                 
@@ -217,7 +251,7 @@
               
             });
 
-
+            $("#list").hide();
           }
         </script>
         
@@ -233,8 +267,18 @@
           }
         </script>
         
-        <script>
         
+        
+        <div id="list"></div>
+        
+        <script>
+          $("#btn1").on("click", function(){
+            console.log("hello");
+              alert($(this).attr('href'));
+              //window.open();
+    
+          });
+          
             
           $("#myBtn").on("click", function(){
               geoFindMe();
@@ -266,26 +310,34 @@
           });
         </script>
         
-        <div class="loader">
-          <svg viewBox="0 0 32 32" width="32" height="32">
-            <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
-          </svg>
-        </div>
+        <!--<div class="loader">-->
+        <!--  <svg viewBox="0 0 32 32" width="32" height="32">-->
+        <!--    <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>-->
+        <!--  </svg>-->
+        <!--</div>-->
         
         <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM">
         </script>
         
-        
-        <div class="col-sm-6" style="display: none">
-          <div class="card">
-            <div class="card-block">
-              <h3 class="card-title">Special title treatment</h3>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
+        <div id="card" class="mdc-card hidden">
+          <section class="mdc-card__primary">
+            <h1 class="mdc-card__title mdc-card__title--large">Title goes here</h1>
+            <h2 class="mdc-card__subtitle">Subtitle here</h2>
+          </section>
+          <section class="mdc-card__supporting-text">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+            commodo consequat.
+          </section>
+          <section class="mdc-card__actions">
+            <!--<button id="btn1" onclick="#" href="#" class="mdc-button mdc-button--compact mdc-card__action">Action 1</button>-->
+            <!--<button id="btn2" class="mdc-button mdc-button--compact mdc-card__action" >Action 2</button>-->
+          </section>
         </div>
+        
+
         
 
         

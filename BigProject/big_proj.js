@@ -51,21 +51,19 @@
 
 	function saveFunction(saveid){
 
-
     var saveitem; 
 
     db2.events.get({id: saveid}, function (item) {
+
       saveitem={
         "id": item.id,
         "title": item.title,
         "address": item.address,
         "url": item.url
       };
-      alert ("id: " + saveitem.id);
-      alert("title: "+ item.title);
 
-      console.log(saveitem);
-      
+
+
       db.events.add({
         id: saveitem.id,
         title: saveitem.title,
