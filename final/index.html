@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+    <head>
+          <!-- Global site tag (gtag.js) - Google Analytics -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-110662046-1"></script>
+          <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          
+            gtag('config', 'UA-110662046-1');
+          </script>
+        <title> </title>
+        <!--whats up-->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+        <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <!--Material component import links-->
+
+          
+        <link rel="stylesheet"
+              href="https://unpkg.com/material-components-web@0.9.1/dist/material-components-web.min.css"> 
+        
+
+        <link rel="stylesheet" href="app.css">
+        
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
+        <script src="./big_proj.js" async></script> 
+
+        
+        <style>
+        
+        
+           #map {
+            height: 400px;
+            width: 100%;
+           }
+            .loader {
+                border: 16px solid #f3f3f3; /* Light grey */
+                border-top: 16px solid #3498db; /* Blue */
+                border-radius: 50%;
+                width: 120px;
+                height: 120px;
+                animation: spin 2s linear infinite;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+        </style>     
+        
+        <link rel="manifest" href="./manifest.json">
+        
+          <!-- Add to home screen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="EventsNearYou">
+        <link rel="apple-touch-icon" href="./three-circles-of-different-sizes-one-inside-other.png">
+        
+        <meta name="msapplication-TileImage" content="./three-circles-of-different-sizes-one-inside-other.png">
+        <meta name="msapplication-TileColor" content="#2F3BA2">
+    </head>
+    <body>
+        
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">FindEvents</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#"></a></li>
+              <li id = "showSearch"><a href="#">Search</a></li>
+              <li id= "showMap"><a href="#">Map Results Display</a></li>
+              <li id = "showList"><a href="#">List Results Display</a></li>
+            </ul>
+          </div>
+        </nav>
+        
+        <div class = "container ">
+          <div id = "searchScreen" class="jumbotron">
+            <h1 style = text-align:center >Find events near you!</h1>
+            <button width: 500x type="button" class="btn-block btn btn-primary btn-lg " id="myBtn">Explore Now!
+              <i class="material-icons mdc-button__icon">add_location</i>
+            </button>
+        
+
+          </div>
+        </div>
+        
+        <div class = "row" id="events">
+            
+            
+        </div>
+        
+        
+        
+        <div id="map"></div>
+        <script>
+          function initMap(lat, long) {
+            db2.events.clear();
+            
+
+            var uluru = {lat: lat, lng: long};
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 12,
+              center: uluru
+            });
+            //map initialized position
+            var marker = new google.maps.Marker({
+              position: uluru,
+              map: map
+            });
+            console.log(lat);
+            console.log(long);
+            $.getJSON("https://polar-garden-75406.herokuapp.com/apiPassThru.php?apiEndpoint=http://api.eventful.com/json/events/search&date=Today&where="+lat+","+long+"&within=5&app_key=Fh3x4vqzpfPjhfzN", function(response)
+            {
+
+              //console.log(response);
+              
+              $.each(response.events.event, function(i,v){
+                  //console.log(v.title);
+                  var currentEvent = v;
+                  saveFunction2(currentEvent);
+                  var contentString = '<div id="content">'+
+                    '<div id="siteNotice">'+
+                    '</div>'+
+                    '<h1 id="firstHeading" class="firstHeading">'+v.title+'</h1>'+
+                    '<div id="bodyContent">'+
+                    '<p><i>'+v.title+'</i></br>Event Description: '+v.description+'</p>'+
+                    '<i>Venue Name:</i> '+v.venue_name+
+                    '</br><i>Venue Address:</> '+v.venue_address+'</p>'+
+                    '<p><i>Website:</i>, <a href='+v.url+'>'+
+                    ''+v.url+'</a></br>'+
+                    '</div>'+
+                    '<button id = "'+v.id+'" class = "mdc-button" data-mdc-auto-init="MDCRipple" onclick="saveFunction(this.id)">Save event</button>'+
+                    '</div>';
+
+                  
+                  
+                var infowindow = new google.maps.InfoWindow({
+                  content: contentString
+
+                });  
+                  
+                var marker = new google.maps.Marker({
+                  position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
+                  map: map,
+                  title: v.title
+                });
+                marker.addListener('click', function() {
+                  infowindow.open(map, marker);
+                });
+               
+               
+                var clone = $("#card").clone();
+                clone.find(".mdc-card__title").text(v.title);
+                clone.find(".mdc-card__subtitle").text('Venue Name: '+v.venue_name+' --- Venue Address: '+v.venue_address);
+                clone.attr("id", v.title);
+                clone.removeClass("hidden");
+                clone.find(".mdc-card__supporting-text").text('Event Description: '+v.description);
+                clone.find("#btn1").text("Visit Website");
+                clone.find('#btn1').attr("href",v.url);
+                //clone.find('#btn1').on("click", navFunction());
+                //clone.find('#btn1').attr("onclick",window.open(v.url));
+                $("#list").append(clone);
+               
+              });
+                
+            });
+            
+            $.get("https://data.cityofchicago.org/resource/p97q-qace.json?$where=within_circle(location, "+lat+", "+long+", 2000)",function(response){
+              // &where=within_circle(location,"+long+","+lat+", 2000)
+              console.log(response);
+             
+              $.each(response, function(i,v){
+                console.log(v.park_name);
+                
+              var dog, basketball, football_soccer, pool, fitness_center;
+              if(v.dog_friendly == 1){
+                dog = "yes";
+              }
+              else{
+                dog = "no";
+              }
+              if(v.basketball_courts == 1){
+                basketball = "yes";
+              }
+              else{
+                basketball = "no";
+              }
+              if(v.football_soccer_combo == 1){
+                football_soccer = "yes";
+              }
+              else{
+                football_soccer = "no";
+              }
+              if(v.pool_indoor == 1 || v.pool_outdoor ==1){
+                pool = "yes";
+              }
+              else{
+                pool = "no";
+              } 
+              if(v.fitness_center ==1){
+                fitness_center = "yes";
+              }
+              else{
+                fitness_center = "no";
+              } 
+                  var parkString = '<div id="content">'+
+                    '<div id="siteNotice">'+
+                    '</div>'+
+                    '<h1 id="firstHeading" class="firstHeading">'+v.park_name+'Park</h1>'+
+                    '<div id="bodyContent">'+
+                    '<p></br>Park Address: '+v.street_address+'</p>'+
+                    '</br><i>Dog Friendly:</> '+dog+'</p>'+
+                    '</br><i>Basketball Courts:</> '+basketball+'</p>'+
+                    '</br><i>Football/Soccer Fields:</> '+football_soccer+'</p>'+ 
+                    '</br><i>Pools:</> '+pool+'</p>'+
+                    '</br><i>Fitness Center:</> '+fitness_center+'</p>'+
+                    '</div>'+
+                    '</div>'; 
+                
+                var infowindow = new google.maps.InfoWindow({
+                  content: parkString
+
+                });  
+                  
+                var marker = new google.maps.Marker({
+                  position: {lat: parseFloat(v.location.latitude), lng: parseFloat(v.location.longitude)},
+                  map: map,
+                  title: v.title
+                });
+                marker.addListener('click', function() {
+                  infowindow.open(map, marker);
+                });                
+                
+                var clone = $("#card").clone();
+                console.log(clone);
+                clone.find(".mdc-card__title").text(v.park_name);
+                clone.attr("id", v.park_name);
+                clone.removeClass("hidden");
+                clone.find(".mdc-card__supporting-text").text(parkString);
+
+                $("#list").append(clone);
+                
+                
+                
+              });
+              
+              
+              
+            });
+
+            $("#list").hide();
+          }
+        </script>
+        
+        <script>
+          function geoFindMe() {
+            if ("geolocation" in navigator) {
+              navigator.geolocation.getCurrentPosition(function(position) {
+              initMap(position.coords.latitude, position.coords.longitude);
+            });
+            } else {
+              alert('no geolocation');
+            }
+          }
+        </script>
+        
+        
+        
+        <div id="list"></div>
+        
+        <script>
+          $("#btn1").on("click", function(){
+            console.log("hello");
+              alert($(this).attr('href'));
+              //window.open();
+    
+          });
+          
+            
+          $("#myBtn").on("click", function(){
+              geoFindMe();
+              $("#searchScreen").hide();
+              $("#map").show();
+              $("#list").show();
+    
+          });
+        </script>
+        <script>
+          $("#showSearch").on("click", function(){
+              $("#searchScreen").show();
+              $("#map").hide();
+              $("#list").hide();
+          });
+        </script>
+        <script>
+          $("#showMap").on("click", function(){
+            $("#map").show();
+            $("#searchScreen").hide();
+            $("#list").hide();
+          });
+        </script>
+        <script>
+          $("#showList").on("click", function(){
+              $("#list").show();
+              $("#searchScreen").hide();
+              $("#map").hide();
+          });
+        </script>
+        
+        <!--<div class="loader">-->
+        <!--  <svg viewBox="0 0 32 32" width="32" height="32">-->
+        <!--    <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>-->
+        <!--  </svg>-->
+        <!--</div>-->
+        
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBaqwXocl8nbEp6Baj_9R9EZQUMrIwmdwM">
+        </script>
+        
+        <div id="card" class="mdc-card hidden">
+          <section class="mdc-card__primary">
+            <h1 class="mdc-card__title mdc-card__title--large">Title goes here</h1>
+            <h2 class="mdc-card__subtitle">Subtitle here</h2>
+          </section>
+          <section class="mdc-card__supporting-text">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+            commodo consequat.
+          </section>
+          <section class="mdc-card__actions">
+            <!--<button id="btn1" onclick="#" href="#" class="mdc-button mdc-button--compact mdc-card__action">Action 1</button>-->
+            <!--<button id="btn2" class="mdc-button mdc-button--compact mdc-card__action" >Action 2</button>-->
+          </section>
+        </div>
+        
+
+        
+
+        
+    </body>
+</html>
